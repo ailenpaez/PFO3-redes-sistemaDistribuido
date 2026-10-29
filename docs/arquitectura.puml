@@ -1,0 +1,33 @@
+@startuml arquitectura
+title Arquitectura objetivo PFO 3
+
+package "Clientes" {
+  [Cliente móvil] as Movil
+  [Cliente web] as Web
+  [cliente.py] as CliPy
+}
+
+[Nginx / HAProxy] as LB
+
+package "Servidores worker" {
+  [Worker 1\n(pool de hilos)] as W1
+  [Worker 2\n(pool de hilos)] as W2
+}
+
+queue RabbitMQ as MQ
+database PostgreSQL as PG
+cloud S3
+
+Movil --> LB
+Web --> LB
+LB --> W1
+LB --> W2
+CliPy --> W1 : prototipo TCP
+W1 --> MQ
+W2 --> MQ
+W1 --> PG
+W2 --> PG
+W1 --> S3
+W2 --> S3
+
+@enduml

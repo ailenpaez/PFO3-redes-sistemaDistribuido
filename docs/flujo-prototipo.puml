@@ -1,0 +1,13 @@
+@startuml flujo-prototipo
+title Flujo del prototipo local
+
+participant "cliente.py" as C
+participant "hilo_conexion" as S
+participant "pool_workers" as P
+
+C -> S : JSON tarea por TCP
+S -> P : submit tarea
+P --> S : resultado
+S --> C : JSON resultado
+
+@enduml

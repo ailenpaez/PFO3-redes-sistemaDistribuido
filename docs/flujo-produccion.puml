@@ -1,0 +1,19 @@
+@startuml flujo-produccion
+title Flujo de una tarea (producción)
+
+participant "Cliente" as C
+participant "Nginx" as LB
+participant "Worker" as W
+queue "RabbitMQ" as Q
+database "PostgreSQL" as DB
+participant "S3" as FS
+
+C -> LB : solicitud de tarea
+LB -> W : reenvía a un worker
+W -> DB : registra tarea
+W -> FS : guarda payload si es archivo
+W -> Q : publica trabajo extra si hace falta
+Q --> W : otro worker puede consumir
+W --> C : resultado
+
+@enduml
